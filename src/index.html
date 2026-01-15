@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../images/favicon-32x32.png"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link href="./index.css" type="text/css" rel="stylesheet" />
+    <script type="module" src="./script.js"></script>
+
+    <title>Virgi | Tip calculator app</title>
+  </head>
+  <body class="flex flex-col items-center gap-10.25 bg-grey-200 lg:gap-22">
+    <header class="flex justify-center pt-12.5">
+      <!-- hidden h1 for screen reader users -->
+      <h1 class="sr-only">Tip calculator app</h1>
+      <img class="w-21.75 h-auto" src="../images/logo.svg" alt="" />
+    </header>
+    <main
+      class="flex flex-col gap-8 pl-6 pr-6 pt-8 pb-8 rounded-3xl bg-white drop-shadow-[0_32px_43px_rgba(79,166,175,0.2)] md:gap-10 md:pl-20 md:pr-20 md:pt-12 md:pb-12 lg:flex-row lg:gap-12 lg:p-8 lg:items-center lg:w-230"
+    >
+      <!-- INPUTS SECTION -->
+      <section class="flex flex-col gap-8 md:gap-6 lg:gap-10">
+        <!-- 1. Bill container -->
+        <div class="flex flex-col gap-2">
+          <label for="bill" class="text-preset-5 text-grey-500">Bill</label>
+          <div
+            class="flex items-center justify-between gap-2 rounded-md pt-2 pb-2 pl-4 pr-4 bg-grey-50 focus-within:outline-2 focus-within:outline-green-400"
+          >
+            <img class="h-4 shrink-0" src="../images/icon-dollar.svg" alt="" />
+            <input
+              id="bill-total"
+              type="text"
+              name="bill-total"
+              placeholder="0"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              autofocus
+              class="w-full min-w-0 text-right text-preset-3 text-green-900 bg-transparent placeholder:opacity-35 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- 2. Select tip % conatiner -->
+        <div class="flex flex-col gap-2">
+          <h3 class="text-preset-5 text-grey-500">Select Tip %</h3>
+          <div
+            class="grid grid-cols-2 grid-rows-3 gap-4 md:grid-cols-3 md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-2"
+          >
+            <button
+              id="tip-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Selected tip: 5%"
+              class="tip-btn"
+            >
+              5%
+            </button>
+            <button
+              id="tip-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Selected tip: 10%"
+              class="tip-btn"
+            >
+              10%
+            </button>
+            <button
+              id="tip-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Selected tip: 15%"
+              class="tip-btn"
+            >
+              15%
+            </button>
+            <button
+              id="tip-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Selected tip: 25%"
+              class="tip-btn"
+            >
+              25%
+            </button>
+            <button
+              id="tip-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Selected tip: 50%"
+              class="tip-btn"
+            >
+              50%
+            </button>
+            <input
+              id="bill-custom"
+              type="text"
+              name="bill-custom"
+              placeholder="Custom"
+              aria-required="true"
+              aria-invalid="false"
+              class="text-center text-preset-3 text-grey-550 rounded-md bg-grey-50 cursor-pointer placeholder:text-grey-550 focus:outline-2 focus-within:outline-green-400"
+            />
+          </div>
+        </div>
+
+        <!-- Number of people -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between">
+            <label for="number-of-people" class="text-preset-5 text-grey-500"
+              >Number of People</label
+            >
+            <!-- error message -->
+            <div
+              id="number-of-people-error"
+              role="alert"
+              aria-live="polite"
+              class="text-preset-5 text-orange-400"
+            >
+              Can't be zero
+            </div>
+          </div>
+
+          <div
+            class="flex items-center justify-between gap-2 rounded-md pt-2 pb-2 pl-4 pr-4 bg-grey-50 focus-within:outline-2 focus-within:outline-green-400"
+          >
+            <img class="h-4 shrink-0" src="../images/icon-person.svg" alt="" />
+            <input
+              id="number-of-people"
+              type="text"
+              name="number-of-people"
+              placeholder="0"
+              required
+              aria-required="true"
+              aria-describedby="number-of-people-error"
+              aria-invalid="false"
+              class="w-full min-w-0 text-right text-preset-3 text-green-900 bg-transparent placeholder:opacity-35 focus:outline-none"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- OUTPUT SECTION -->
+      <section
+        class="flex flex-col gap-8 p-6 rounded-2xl bg-green-900 md:gap-4 md:pl-12 md:pr-12 md:pt-10 md:pb-10 lg:gap-32 lg:pl-8 lg:pr-8 lg:pt-6 lg:pb-6"
+      >
+        <!-- 1. Outputs container -->
+        <div class="flex flex-col gap-6 lg:w-83.25">
+          <!-- Tip amount container -->
+          <div class="flex justify-between items-center">
+            <h3 class="text-preset-5 text-white">
+              Tip Amount <br /><span class="text-preset-6 text-grey-400"
+                >/ person</span
+              >
+            </h3>
+            <p
+              class="font-space-mono font-bold text-[2rem] leading-(--line-height-47) tracking-[-0.67px] text-green-400 md:text-5xl md:leading-(--line-height-71) md:tracking-[-1px]"
+            >
+              $0.00
+            </p>
+          </div>
+          <!-- Total container -->
+          <div class="flex justify-between items-center">
+            <h3 class="text-preset-5 text-white">
+              Total Amount <br /><span class="text-preset-6 text-grey-400"
+                >/ person</span
+              >
+            </h3>
+            <p
+              class="font-space-mono font-bold text-[2rem] leading-(--line-height-47) tracking-[-0.67px] text-green-400 md:text-5xl md:leading-(--line-height-71) md:tracking-[-1px]"
+            >
+              $0.00
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. Reset Button -->
+        <button
+          id="reset-button"
+          type="button"
+          aria-pressed="false"
+          aria-label="Reset"
+          aria-describedby="reset-help"
+          class="reset-btn"
+        >
+          RESET
+        </button>
+        <small id="reset-help" class="hidden">
+          Press Enter or click to submit your registration
+        </small>
+      </section>
+    </main>
+    <footer>
+      <div class="text-preset-5 text-grey-550 text-center pb-8">
+        Challenge by
+        <a
+          class="text-grey-400 focus:text-green-900 hover:text-green-900 active:text-green-900"
+          href="https://www.frontendmentor.io?ref=challenge"
+          target="_blank"
+          >Frontend Mentor.</a
+        >
+        <br />Coded by
+        <a
+          class="text-grey-400 focus:text-green-900 hover:text-green-900 active:text-green-900"
+          href="https://www.frontendmentor.io/profile/VirginiaPat"
+          target="_blank"
+          >Virginia Patrika.</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

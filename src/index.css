@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-grey-600: #3d6666;
+  --color-grey-550: #547878;
+  --color-grey-500: #5e7a7d;
+  --color-grey-400: #7f9d9f;
+  --color-grey-300: #9ebbbd;
+  --color-grey-200: #c5e4e7;
+  --color-grey-50: #f3f9fa;
+
+  --color-green-900: #00474b;
+  --color-green-800: #085c61;
+  --color-green-750: #0d686d;
+  --color-green-400: #26c2ae;
+  --color-green-200: #9fe8df;
+
+  --color-orange-400: #e17052;
+
+  --font-space-mono: "Space Mono", sans-serif;
+
+  --line-height-19: 1.1875rem;
+  --line-height-24: 1.5rem;
+  --line-height-30: 1.875rem;
+  --line-height-36: 2.25rem;
+  --line-height-47: 2.9375rem;
+  --line-height-71: 4.4375rem;
+
+  /* custom breakpoin:608px */
+  --breakpoint-md: 38rem;
+  /* custom breakpoint:920px */
+  --breakpoint-lg: 57.5rem;
+}
+
+/* Typography */
+.text-preset-1 {
+  @apply font-space-mono font-bold text-5xl leading-(--line-height-71) tracking-[-1px];
+}
+
+.text-preset-2 {
+  @apply font-space-mono font-bold text-[2rem] leading-(--line-height-47) tracking-[-0.67px];
+}
+
+.text-preset-3 {
+  @apply font-space-mono font-bold text-2xl leading-(--line-height-36) tracking-normal;
+}
+
+.text-preset-4 {
+  @apply font-space-mono font-bold text-xl leading-(--line-height-30) tracking-normal;
+}
+
+.text-preset-5 {
+  @apply font-space-mono font-bold text-base leading-(--line-height-24) tracking-normal;
+}
+
+.text-preset-6 {
+  @apply font-space-mono font-bold text-[0.8125rem] leading-(--line-height-19) tracking-normal;
+}
+
+/* Custom classes */
+.tip-btn {
+  @apply pt-2 pb-2 font-space-mono font-bold text-2xl leading-(--line-height-36) tracking-normal text-center text-white rounded-md bg-green-900 cursor-pointer;
+}
+
+.reset-btn {
+  @apply font-space-mono font-bold text-xl leading-(--line-height-30) tracking-normal text-green-800 rounded-md bg-green-750 pt-2 pb-2 cursor-pointer;
+}
+
+.tip-btn:focus,
+.tip-btn:hover,
+.reset-btn:focus,
+.reset-btn:hover {
+  @apply bg-green-400 text-green-900 transition-all outline-none;
+}
+
+.tip-btn:active,
+.reset-btn:active {
+  @apply bg-green-200 text-green-900;
+}
