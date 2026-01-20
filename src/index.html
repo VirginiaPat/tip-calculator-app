@@ -21,7 +21,7 @@
     <link href="./index.css" type="text/css" rel="stylesheet" />
     <script type="module" src="./script.js"></script>
 
-    <title>Virgi | Tip calculator app</title>
+    <title>Tip calculator app</title>
   </head>
   <body class="flex flex-col items-center gap-10.25 bg-grey-200 lg:gap-22">
     <header class="flex justify-center pt-12.5">
@@ -50,6 +50,7 @@
           </div>
 
           <div
+            id="bill-total-parentEl"
             class="flex items-center justify-between gap-2 rounded-md pt-2 pb-2 pl-4 pr-4 bg-grey-50 focus-within:outline-2 focus-within:outline-green-400"
           >
             <img class="h-4 shrink-0" src="../images/icon-dollar.svg" alt="" />
@@ -162,6 +163,7 @@
           </div>
 
           <div
+            id="number-of-people-parentEl"
             class="flex items-center justify-between gap-2 rounded-md pt-2 pb-2 pl-4 pr-4 bg-grey-50 focus-within:outline-2 focus-within:outline-green-400"
           >
             <img class="h-4 shrink-0" src="../images/icon-person.svg" alt="" />
@@ -229,7 +231,10 @@
         >
           RESET
         </button>
-        <small id="reset-help" class="hidden">
+        <small
+          id="reset-help"
+          class="sr-only text-preset-6 text-white text-center"
+        >
           Press Enter or click to reset
         </small>
       </section>

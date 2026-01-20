@@ -2,9 +2,13 @@
 
 // Select elements
 const billInput = document.getElementById("bill-total");
+const billInputParentEl = document.getElementById("bill-total-parentEl");
 const tipButtons = document.querySelectorAll(".tip-btn");
 const tipCustomInput = document.getElementById("tip-custom");
 const numOfPeopleInput = document.getElementById("number-of-people");
+const numOfPeopleInputParentEl = document.getElementById(
+  "number-of-people-parentEl"
+);
 const tipAmountOutput = document.getElementById("tip-amount-output");
 const totalAmountOutput = document.getElementById("total-amount-output");
 const resetButton = document.getElementById("reset-button");
@@ -21,48 +25,20 @@ resetButton.disabled = true;
 resetButton.classList.add("cursor-not-allowed");
 
 // Functions
-const showBillErrorMessage = () => {
-  errorMessageBill.classList.remove("hidden");
-  billInput.parentElement.classList.remove("focus-within:outline-green-400");
-  billInput.parentElement.classList.add("focus-within:outline-orange-400");
+const showErrorMessage = (errorMessageElement, inputElement) => {
+  const messageElement = errorMessageElement;
+  const inputEl = inputElement;
+  messageElement.classList.remove("hidden");
+  inputEl.classList.remove("focus-within:outline-green-400");
+  inputEl.classList.add("focus-within:outline-orange-400");
 };
 
-const hideBillErrorMessage = () => {
-  errorMessageBill.classList.add("hidden");
-  billInput.parentElement.classList.remove("focus-within:outline-orange-400");
-  billInput.parentElement.classList.add("focus-within:outline-green-400");
-};
-
-const showCustomTipErrorMsg = () => {
-  errorMessageCustom.classList.remove("hidden");
-  tipCustomInput.classList.remove("focus:outline-green-400");
-  tipCustomInput.classList.add("focus:outline-orange-400");
-};
-
-const hideCustomTipErrorMsg = () => {
-  errorMessageCustom.classList.add("hidden");
-  tipCustomInput.classList.remove("focus:outline-orange-400");
-  tipCustomInput.classList.add("focus:outline-green-400");
-};
-
-const showNumPeopleErrorMessage = () => {
-  errorMessagePersons.classList.remove("hidden");
-  numOfPeopleInput.parentElement.classList.remove(
-    "focus-within:outline-green-400"
-  );
-  numOfPeopleInput.parentElement.classList.add(
-    "focus-within:outline-orange-400"
-  );
-};
-
-const hideNumPeopleErrorMessage = () => {
-  errorMessagePersons.classList.add("hidden");
-  numOfPeopleInput.parentElement.classList.remove(
-    "focus-within:outline-orange-400"
-  );
-  numOfPeopleInput.parentElement.classList.add(
-    "focus-within:outline-green-400"
-  );
+const hideErrorMessage = (errorMessageElement, inputElement) => {
+  const messageElement = errorMessageElement;
+  const inputEl = inputElement;
+  messageElement.classList.add("hidden");
+  inputEl.classList.add("focus-within:outline-green-400");
+  inputEl.classList.remove("focus-within:outline-orange-400");
 };
 
 const resetBtnActivation = () => {
@@ -137,7 +113,7 @@ billInput.addEventListener("input", (e) => {
 
   if (isNaN(insertedBillValue) || insertedBillValue <= 0) {
     billInput.setAttribute("aria-invalid", "true");
-    showBillErrorMessage();
+    showErrorMessage(errorMessageBill, billInputParentEl);
   } else {
     billAmount = insertedBillValue;
     calculateCosts();
@@ -149,7 +125,7 @@ billInput.addEventListener("input", (e) => {
     !errorMessageBill.classList.contains("hidden")
   ) {
     billInput.setAttribute("aria-invalid", "false");
-    hideBillErrorMessage();
+    hideErrorMessage(errorMessageBill, billInputParentEl);
   }
 });
 
@@ -191,7 +167,7 @@ tipCustomInput.addEventListener("blur", () => {
   }
 });
 
-// Hanndling custom tip input
+// Handling custom tip input
 tipCustomInput.addEventListener("input", (e) => {
   const insertedCustomTip = parseFloat(e.target.value);
 
@@ -203,7 +179,7 @@ tipCustomInput.addEventListener("input", (e) => {
 
   if (isNaN(insertedCustomTip) || insertedCustomTip <= 0) {
     tipCustomInput.setAttribute("aria-invalid", "true");
-    showCustomTipErrorMsg();
+    showErrorMessage(errorMessageCustom, tipCustomInput);
   } else {
     tipPercentage = insertedCustomTip;
     calculateCosts();
@@ -215,7 +191,7 @@ tipCustomInput.addEventListener("input", (e) => {
     !errorMessageCustom.classList.contains("hidden")
   ) {
     tipCustomInput.setAttribute("aria-invalid", "false");
-    hideCustomTipErrorMsg();
+    hideErrorMessage(errorMessageCustom, tipCustomInput);
   }
 });
 
@@ -240,7 +216,7 @@ numOfPeopleInput.addEventListener("input", (e) => {
 
   if (isNaN(insertedNumberPeopleValue) || insertedNumberPeopleValue <= 0) {
     numOfPeopleInput.setAttribute("aria-invalid", "true");
-    showNumPeopleErrorMessage();
+    showErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
   } else {
     numberOfPeople = insertedNumberPeopleValue;
     calculateCosts();
@@ -252,7 +228,7 @@ numOfPeopleInput.addEventListener("input", (e) => {
     !errorMessagePersons.classList.contains("hidden")
   ) {
     numOfPeopleInput.setAttribute("aria-invalid", "false");
-    hideNumPeopleErrorMessage();
+    hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
   }
 });
 
