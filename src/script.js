@@ -115,6 +115,8 @@ billInput.addEventListener("input", (e) => {
     billInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessageBill, billInputParentEl);
   } else {
+    billInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessageBill, billInputParentEl);
     billAmount = insertedBillValue;
     calculateCosts();
   }
@@ -124,7 +126,7 @@ billInput.addEventListener("input", (e) => {
     billInput.value === "" &&
     !errorMessageBill.classList.contains("hidden")
   ) {
-    billInput.setAttribute("aria-invalid", "false");
+    billInput.removeAttribute("aria-invalid");
     hideErrorMessage(errorMessageBill, billInputParentEl);
   }
 });
@@ -136,7 +138,7 @@ tipButtons.forEach((button) => {
 
     // Remove active state from other buttons
     tipButtons.forEach((btn) => {
-      btn.setAttribute("aria-pressed", "false");
+      btn.removeAttribute("aria-pressed");
       btn.classList.remove("active:bg-green-200", "active:text-green-900");
     });
 
@@ -169,32 +171,37 @@ tipCustomInput.addEventListener("blur", () => {
 
 // Handling custom tip input
 tipCustomInput.addEventListener("input", (e) => {
-  const insertedCustomTip = parseFloat(e.target.value);
+  const value = e.target.value;
+  const insertedCustomTip = parseFloat(value);
 
   // Remove active state from other buttons
   tipButtons.forEach((button) => {
-    button.setAttribute("aria-pressed", "false");
+    button.removeAttribute("aria-pressed");
     button.classList.remove("active:bg-green-200", "active:text-green-900");
   });
 
+  // Clear error if input is empty
+  if (value === "") {
+    tipCustomInput.removeAttribute("aria-invalid"); // remove invalid state
+    hideErrorMessage(errorMessageCustom, tipCustomInput);
+    tipPercentage = 0; // reset tip percentage if needed
+    calculateCosts();
+    return; // exit early
+  }
+
+  // Validate input
   if (isNaN(insertedCustomTip) || insertedCustomTip <= 0) {
     tipCustomInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessageCustom, tipCustomInput);
   } else {
+    // Clear error state when valid input entered
+    tipCustomInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessageCustom, tipCustomInput);
+
     tipPercentage = insertedCustomTip;
     calculateCosts();
   }
-
-  // if input is empty but conatins error message-remove it
-  if (
-    tipCustomInput.value === "" &&
-    !errorMessageCustom.classList.contains("hidden")
-  ) {
-    tipCustomInput.setAttribute("aria-invalid", "false");
-    hideErrorMessage(errorMessageCustom, tipCustomInput);
-  }
 });
-
 // Number of people INPUT--------------------------------
 // Remove placeholder when click input
 const numPersonsPlaceholder = numOfPeopleInput.placeholder;
@@ -218,6 +225,8 @@ numOfPeopleInput.addEventListener("input", (e) => {
     numOfPeopleInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
   } else {
+    numOfPeopleInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
     numberOfPeople = insertedNumberPeopleValue;
     calculateCosts();
   }
@@ -227,7 +236,7 @@ numOfPeopleInput.addEventListener("input", (e) => {
     numOfPeopleInput.value === "" &&
     !errorMessagePersons.classList.contains("hidden")
   ) {
-    numOfPeopleInput.setAttribute("aria-invalid", "false");
+    numOfPeopleInput.removeAttribute("aria-invalid");
     hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
   }
 });
@@ -243,7 +252,7 @@ resetButton.addEventListener("click", () => {
   numOfPeopleInput.value = "";
 
   tipButtons.forEach((button) => {
-    button.setAttribute("aria-pressed", "false");
+    button.removeAttribute("aria-pressed");
     button.classList.remove("active:bg-green-200", "active:text-green-900");
   });
 
