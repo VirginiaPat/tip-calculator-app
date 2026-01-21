@@ -94,7 +94,7 @@ const calculateCosts = () => {
 // Event listeners------------------------------------------------------
 // Bill INPUT-----------------------------------------------------------
 // Remove placeholder when click input
-const billPlaceholder = billInput.placeholder;
+let billPlaceholder = billInput.placeholder;
 
 billInput.addEventListener("focus", () => {
   billInput.placeholder = "";
@@ -109,25 +109,48 @@ billInput.addEventListener("blur", () => {
 
 //Handling bill input
 billInput.addEventListener("input", (e) => {
-  const insertedBillValue = parseFloat(e.target.value);
+  let value = e.target.value;
 
+  // Remove any non-numeric characters except decimal point
+  value = value.replace(/[^0-9.]/g, "");
+
+  // Prevent multiple decimals
+  const parts = value.split(".");
+  if (parts.length > 2) {
+    value = parts[0] + "." + parts.slice(1).join("");
+  }
+
+  // Limit to 2 decimal places
+  if (parts.length === 2 && parts[1].length > 2) {
+    value = parts[0] + "." + parts[1].substring(0, 2);
+  }
+  // Update the input value to sanitized version
+  e.target.value = value;
+
+  const insertedBillValue = parseFloat(value);
+
+  // Clear error if input is empty
+  if (value === "") {
+    billInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessageBill, billInputParentEl);
+    billAmount = 0; //reset bill amount
+    calculateCosts();
+    return; //exit early
+  }
+
+  //Validate input
   if (isNaN(insertedBillValue) || insertedBillValue <= 0) {
     billInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessageBill, billInputParentEl);
+    billAmount = 0;
+    calculateCosts();
+    return;
   } else {
     billInput.removeAttribute("aria-invalid");
     hideErrorMessage(errorMessageBill, billInputParentEl);
+
     billAmount = insertedBillValue;
     calculateCosts();
-  }
-
-  // if input is empty but contains error message-remove it
-  if (
-    billInput.value === "" &&
-    !errorMessageBill.classList.contains("hidden")
-  ) {
-    billInput.removeAttribute("aria-invalid");
-    hideErrorMessage(errorMessageBill, billInputParentEl);
   }
 });
 
@@ -156,7 +179,7 @@ tipButtons.forEach((button) => {
 
 // Custom tip % INPUT-------------------------------------------
 // Remove placeholder when click input
-const customTipPlaceholder = tipCustomInput.placeholder;
+let customTipPlaceholder = tipCustomInput.placeholder;
 
 tipCustomInput.addEventListener("focus", () => {
   tipCustomInput.placeholder = "";
@@ -171,7 +194,14 @@ tipCustomInput.addEventListener("blur", () => {
 
 // Handling custom tip input
 tipCustomInput.addEventListener("input", (e) => {
-  const value = e.target.value;
+  let value = e.target.value;
+
+  // Remove any non-numeric characters
+  value = value.replace(/[^0-9]/g, "");
+
+  // Update the input value to sanitized version
+  e.target.value = value;
+
   const insertedCustomTip = parseFloat(value);
 
   // Remove active state from other buttons
@@ -184,7 +214,7 @@ tipCustomInput.addEventListener("input", (e) => {
   if (value === "") {
     tipCustomInput.removeAttribute("aria-invalid"); // remove invalid state
     hideErrorMessage(errorMessageCustom, tipCustomInput);
-    tipPercentage = 0; // reset tip percentage if needed
+    tipPercentage = 0; // reset tip percentage
     calculateCosts();
     return; // exit early
   }
@@ -193,6 +223,9 @@ tipCustomInput.addEventListener("input", (e) => {
   if (isNaN(insertedCustomTip) || insertedCustomTip <= 0) {
     tipCustomInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessageCustom, tipCustomInput);
+    tipPercentage = 0; // reset to avoid stale value
+    calculateCosts(); // update calculations with reset tip
+    return;
   } else {
     // Clear error state when valid input entered
     tipCustomInput.removeAttribute("aria-invalid");
@@ -204,7 +237,7 @@ tipCustomInput.addEventListener("input", (e) => {
 });
 // Number of people INPUT--------------------------------
 // Remove placeholder when click input
-const numPersonsPlaceholder = numOfPeopleInput.placeholder;
+let numPersonsPlaceholder = numOfPeopleInput.placeholder;
 
 numOfPeopleInput.addEventListener("focus", () => {
   numOfPeopleInput.placeholder = "";
@@ -219,25 +252,37 @@ numOfPeopleInput.addEventListener("blur", () => {
 
 //Handling number of people input
 numOfPeopleInput.addEventListener("input", (e) => {
+  let value = e.target.value;
+
+  // Remove any non-numeric characters
+  value = value.replace(/[^0-9]/g, "");
+
+  // Update the input value to sanitized version
+  e.target.value = value;
+
   const insertedNumberPeopleValue = parseFloat(e.target.value);
 
+  // Clear error if input is empty
+  if (numOfPeopleInput.value === "") {
+    numOfPeopleInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
+    numberOfPeople = 0;
+    calculateCosts();
+    return;
+  }
+
+  // Validate input
   if (isNaN(insertedNumberPeopleValue) || insertedNumberPeopleValue <= 0) {
     numOfPeopleInput.setAttribute("aria-invalid", "true");
     showErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
+    numberOfPeople = 0;
+    calculateCosts();
+    return;
   } else {
     numOfPeopleInput.removeAttribute("aria-invalid");
     hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
     numberOfPeople = insertedNumberPeopleValue;
     calculateCosts();
-  }
-
-  // if input is empty but contains error message-remove it
-  if (
-    numOfPeopleInput.value === "" &&
-    !errorMessagePersons.classList.contains("hidden")
-  ) {
-    numOfPeopleInput.removeAttribute("aria-invalid");
-    hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
   }
 });
 
@@ -250,6 +295,10 @@ resetButton.addEventListener("click", () => {
   billInput.value = "";
   tipCustomInput.value = "";
   numOfPeopleInput.value = "";
+
+  billInput.placeholder = "0";
+  tipCustomInput.placeholder = "Custom";
+  numOfPeopleInput.placeholder = "0";
 
   tipButtons.forEach((button) => {
     button.removeAttribute("aria-pressed");
