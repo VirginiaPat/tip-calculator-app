@@ -94,7 +94,7 @@ const calculateCosts = () => {
 // Event listeners------------------------------------------------------
 // Bill INPUT-----------------------------------------------------------
 // Remove placeholder when click input
-let billPlaceholder = billInput.placeholder;
+const billPlaceholder = billInput.placeholder;
 
 billInput.addEventListener("focus", () => {
   billInput.placeholder = "";
@@ -179,7 +179,7 @@ tipButtons.forEach((button) => {
 
 // Custom tip % INPUT-------------------------------------------
 // Remove placeholder when click input
-let customTipPlaceholder = tipCustomInput.placeholder;
+const customTipPlaceholder = tipCustomInput.placeholder;
 
 tipCustomInput.addEventListener("focus", () => {
   tipCustomInput.placeholder = "";
@@ -237,7 +237,7 @@ tipCustomInput.addEventListener("input", (e) => {
 });
 // Number of people INPUT--------------------------------
 // Remove placeholder when click input
-let numPersonsPlaceholder = numOfPeopleInput.placeholder;
+const numPersonsPlaceholder = numOfPeopleInput.placeholder;
 
 numOfPeopleInput.addEventListener("focus", () => {
   numOfPeopleInput.placeholder = "";
