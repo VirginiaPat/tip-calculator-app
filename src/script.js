@@ -7,7 +7,7 @@ const tipButtons = document.querySelectorAll(".tip-btn");
 const tipCustomInput = document.getElementById("tip-custom");
 const numOfPeopleInput = document.getElementById("number-of-people");
 const numOfPeopleInputParentEl = document.getElementById(
-  "number-of-people-parentEl"
+  "number-of-people-parentEl",
 );
 const tipAmountOutput = document.getElementById("tip-amount-output");
 const totalAmountOutput = document.getElementById("total-amount-output");
@@ -54,7 +54,7 @@ const resetBtnActivation = () => {
     "focus:bg-green-400",
     "focus:text-green-900",
     "active:bg-green-200",
-    "active:text-green-900"
+    "active:text-green-900",
   );
 };
 
@@ -70,7 +70,7 @@ const resetBtnDisable = () => {
     "focus:bg-green-400",
     "focus:text-green-900",
     "active:bg-green-200",
-    "active:text-green-900"
+    "active:text-green-900",
   );
   resetButton.classList.add("cursor-not-allowed", "text-green-800");
 };
@@ -90,6 +90,18 @@ const calculateCosts = () => {
     totalAmountOutput.textContent = "$0.00";
   }
 };
+
+//Implement debouncing for smoother experience (to avoid calculateCosts() being called in every keystroke)
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
+
+// Debounced calculateCost() - I use it only for bill input as it is the only one that gets decimals
+const debouncedCalculate = debounce(calculateCosts, 300);
 
 // Event listeners------------------------------------------------------
 // Bill INPUT-----------------------------------------------------------
@@ -150,7 +162,7 @@ billInput.addEventListener("input", (e) => {
     hideErrorMessage(errorMessageBill, billInputParentEl);
 
     billAmount = insertedBillValue;
-    calculateCosts();
+    debouncedCalculate();
   }
 });
 
@@ -163,12 +175,13 @@ tipButtons.forEach((button) => {
     tipButtons.forEach((btn) => {
       btn.removeAttribute("aria-pressed");
       btn.classList.remove("active:bg-green-200", "active:text-green-900");
+      btn.removeAttribute("data-selected");
     });
 
     // add active to the current button
     pressedButton.setAttribute("aria-pressed", "true");
     pressedButton.classList.add("active:bg-green-200", "active:text-green-900");
-
+    pressedButton.setAttribute("data-selected", "true");
     tipCustomInput.value = "";
 
     tipPercentage = parseFloat(pressedButton.dataset.tip);
@@ -208,6 +221,7 @@ tipCustomInput.addEventListener("input", (e) => {
   tipButtons.forEach((button) => {
     button.removeAttribute("aria-pressed");
     button.classList.remove("active:bg-green-200", "active:text-green-900");
+    button.setAttribute("data-selected", "false");
   });
 
   // Clear error if input is empty
@@ -285,6 +299,53 @@ numOfPeopleInput.addEventListener("input", (e) => {
     calculateCosts();
   }
 });
+
+// Implementing arrow navigation in tip buttons
+const setupKeyboardNavigation = () => {
+  const buttons = Array.from(tipButtons);
+
+  // Set initial tabindex
+  buttons.forEach((btn, index) => {
+    btn.setAttribute("tabindex", index === 0 ? "0" : "-1");
+  });
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("keydown", (e) => {
+      let newIndex = index;
+
+      switch (e.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          e.preventDefault();
+          newIndex = (index + 1) % buttons.length;
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          e.preventDefault();
+          newIndex = index === 0 ? buttons.length - 1 : index - 1;
+          break;
+        case "Home":
+          e.preventDefault();
+          newIndex = 0;
+          break;
+        case "End":
+          e.preventDefault();
+          newIndex = buttons.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      // Update tabindex
+      buttons.forEach((btn) => btn.setAttribute("tabindex", "-1"));
+      buttons[newIndex].setAttribute("tabindex", "0");
+      buttons[newIndex].focus();
+    });
+  });
+};
+
+// Call function after DOM load
+setupKeyboardNavigation();
 
 //Reset button-------------------------------------------------
 resetButton.addEventListener("click", () => {

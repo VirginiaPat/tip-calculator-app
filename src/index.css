@@ -61,3 +61,7 @@
 .tip-btn {
   @apply pt-2 pb-2 font-space-mono font-bold text-2xl leading-(--line-height-36) tracking-normal text-center text-white rounded-md bg-green-900 cursor-pointer hover:bg-green-400 hover:text-green-900 hover:transition-all focus:bg-green-400 focus:text-green-900 focus:outline-none active:bg-green-200 active:text-green-900;
 }
+
+.tip-btn[data-selected="true"] {
+  @apply bg-green-200 text-green-900;
+}
