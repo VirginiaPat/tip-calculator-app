@@ -29,16 +29,32 @@ const showErrorMessage = (errorMessageElement, inputElement) => {
   const messageElement = errorMessageElement;
   const inputEl = inputElement;
   messageElement.classList.remove("hidden");
-  inputEl.classList.remove("focus-within:outline-green-400");
-  inputEl.classList.add("focus-within:outline-orange-400");
+  // for bill and number of people input
+  if (inputEl.classList.contains("focus-within:outline-green-400")) {
+    inputEl.classList.remove("focus-within:outline-green-400");
+    inputEl.classList.add("focus-within:outline-orange-400");
+  }
+  // for custom tip input
+  if (inputEl.classList.contains("focus:outline-green-400")) {
+    inputEl.classList.remove("focus:outline-green-400");
+    inputEl.classList.add("focus:outline-orange-400");
+  }
 };
 
 const hideErrorMessage = (errorMessageElement, inputElement) => {
   const messageElement = errorMessageElement;
   const inputEl = inputElement;
   messageElement.classList.add("hidden");
-  inputEl.classList.add("focus-within:outline-green-400");
-  inputEl.classList.remove("focus-within:outline-orange-400");
+  // for bill and number of people input
+  if (inputEl.classList.contains("focus-within:outline-orange-400")) {
+    inputEl.classList.add("focus-within:outline-green-400");
+    inputEl.classList.remove("focus-within:outline-orange-400");
+  }
+  // for custom tip input
+  if (inputEl.classList.contains("focus:outline-orange-400")) {
+    inputEl.classList.add("focus:outline-green-400");
+    inputEl.classList.remove("focus:outline-orange-400");
+  }
 };
 
 const resetBtnActivation = () => {
@@ -75,6 +91,44 @@ const resetBtnDisable = () => {
   resetButton.classList.add("cursor-not-allowed", "text-green-800");
 };
 
+// General reset function
+const resetValues = () => {
+  //Reset state variables
+  billAmount = 0;
+  tipPercentage = 0;
+  numberOfPeople = 0;
+
+  // Clear all inputs
+  billInput.value = "";
+  tipCustomInput.value = "";
+  numOfPeopleInput.value = "";
+
+  // Reset placeholders
+  billInput.placeholder = "0";
+  tipCustomInput.placeholder = "Custom";
+  numOfPeopleInput.placeholder = "0";
+
+  // Remove any active states from tip buttons
+  tipButtons.forEach((button) => {
+    button.removeAttribute("aria-pressed");
+    button.classList.remove("active:bg-green-200", "active:text-green-900");
+    button.removeAttribute("data-selected");
+  });
+
+  // Reset outpouts
+  tipAmountOutput.textContent = "$0.00";
+  totalAmountOutput.textContent = "$0.00";
+
+  // Clear aria-invalid attributes
+  billInput.removeAttribute("aria-invalid");
+  tipCustomInput.removeAttribute("aria-invalid");
+  numOfPeopleInput.removeAttribute("aria-invalid");
+
+  // disable reset button
+  resetBtnDisable();
+};
+
+// Calculate values
 const calculateCosts = () => {
   if (billAmount > 0 && tipPercentage > 0 && numberOfPeople > 0) {
     const tipAmount = (billAmount * tipPercentage * 0.01) / numberOfPeople;
@@ -83,11 +137,27 @@ const calculateCosts = () => {
     tipAmountOutput.textContent = `$${tipAmount.toFixed(2)}`;
     totalAmountOutput.textContent = `$${totalAmount.toFixed(2)}`;
 
+    // Update ARIA labels for screen readers
+    tipAmountOutput.setAttribute(
+      "aria-label",
+      `Tip amount per person: $${tipAmount.toFixed(2)}`,
+    );
+    totalAmountOutput.setAttribute(
+      "aria-label",
+      `Total amount per person: $${totalAmount.toFixed(2)}`,
+    );
+
     // make reset button active
     resetBtnActivation();
   } else {
     tipAmountOutput.textContent = "$0.00";
     totalAmountOutput.textContent = "$0.00";
+
+    tipAmountOutput.setAttribute("aria-label", "Tip amount per person: $0.00");
+    totalAmountOutput.setAttribute(
+      "aria-label",
+      "Total amount per person: $0.00",
+    );
   }
 };
 
@@ -104,6 +174,7 @@ const debounce = (func, delay) => {
 const debouncedCalculate = debounce(calculateCosts, 300);
 
 // Event listeners------------------------------------------------------
+
 // Bill INPUT-----------------------------------------------------------
 // Remove placeholder when click input
 const billPlaceholder = billInput.placeholder;
@@ -177,6 +248,13 @@ tipButtons.forEach((button) => {
       btn.classList.remove("active:bg-green-200", "active:text-green-900");
       btn.removeAttribute("data-selected");
     });
+
+    // in case of value presence in custom tip input remove value, set placeholder back and remove attributes
+    tipCustomInput.value = "";
+    tipCustomInput.placeholder = customTipPlaceholder;
+    tipCustomInput.removeAttribute("aria-invalid");
+    hideErrorMessage(errorMessageCustom, tipCustomInput);
+    tipPercentage = 0;
 
     // add active to the current button
     pressedButton.setAttribute("aria-pressed", "true");
@@ -349,26 +427,16 @@ setupKeyboardNavigation();
 
 //Reset button-------------------------------------------------
 resetButton.addEventListener("click", () => {
-  billAmount = 0;
-  tipPercentage = 0;
-  numberOfPeople = 0;
+  resetValues();
+});
 
-  billInput.value = "";
-  tipCustomInput.value = "";
-  numOfPeopleInput.value = "";
+//Reset everything when page reloads
+window.addEventListener("load", () => {
+  // Hide error messages
+  hideErrorMessage(errorMessageBill, billInputParentEl);
+  hideErrorMessage(errorMessageCustom, tipCustomInput);
+  hideErrorMessage(errorMessagePersons, numOfPeopleInputParentEl);
 
-  billInput.placeholder = "0";
-  tipCustomInput.placeholder = "Custom";
-  numOfPeopleInput.placeholder = "0";
-
-  tipButtons.forEach((button) => {
-    button.removeAttribute("aria-pressed");
-    button.classList.remove("active:bg-green-200", "active:text-green-900");
-  });
-
-  tipAmountOutput.textContent = "$0.00";
-  totalAmountOutput.textContent = "$0.00";
-
-  // disable reset button
-  resetBtnDisable();
+  // Reset all values
+  resetValues();
 });

@@ -65,6 +65,7 @@
               type="text"
               name="bill-total"
               placeholder="0"
+              autocomplete="off"
               required
               aria-required="true"
               aria-invalid="false"
@@ -150,10 +151,11 @@
               type="text"
               name="tip-custom"
               placeholder="Custom"
+              autocomplete="off"
               aria-required="true"
               aria-invalid="false"
               aria-describedby="custom-tip-error"
-              class="text-center text-preset-3 rounded-md text-grey-550 bg-grey-50 focus:outline-2 focus-within:outline-green-400"
+              class="text-center text-preset-3 rounded-md text-grey-550 bg-grey-50 transition-colors duration-200 hover:bg-green-200 focus:outline-2 focus:outline-green-400 focus:bg-white placeholder:text-grey-400;"
             />
           </div>
         </div>
@@ -171,7 +173,7 @@
               aria-live="polite"
               class="hidden text-preset-5 text-orange-400 text-end"
             >
-              Can’t be zero
+              Can&#39;t be zero
             </div>
           </div>
 
@@ -185,6 +187,7 @@
               type="text"
               name="number-of-people"
               placeholder="0"
+              autocomplete="off"
               required
               aria-required="true"
               aria-invalid="false"
