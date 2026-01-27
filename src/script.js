@@ -283,6 +283,15 @@ tipCustomInput.addEventListener("blur", () => {
   }
 });
 
+//remove active states from other buttons when clicking in the input
+tipCustomInput.addEventListener("click", () => {
+  tipButtons.forEach((button) => {
+    button.removeAttribute("aria-pressed");
+    button.classList.remove("active:bg-green-200", "active:text-green-900");
+    button.setAttribute("data-selected", "false");
+  });
+});
+
 // Handling custom tip input
 tipCustomInput.addEventListener("input", (e) => {
   let value = e.target.value;
@@ -294,13 +303,6 @@ tipCustomInput.addEventListener("input", (e) => {
   e.target.value = value;
 
   const insertedCustomTip = parseFloat(value);
-
-  // Remove active state from other buttons
-  tipButtons.forEach((button) => {
-    button.removeAttribute("aria-pressed");
-    button.classList.remove("active:bg-green-200", "active:text-green-900");
-    button.setAttribute("data-selected", "false");
-  });
 
   // Clear error if input is empty
   if (value === "") {
